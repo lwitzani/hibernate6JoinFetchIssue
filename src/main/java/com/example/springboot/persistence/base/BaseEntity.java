@@ -1,6 +1,6 @@
 package com.example.springboot.persistence.base;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Setter;
 
 @Setter

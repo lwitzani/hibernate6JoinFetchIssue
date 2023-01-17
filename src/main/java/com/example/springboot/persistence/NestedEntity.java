@@ -1,7 +1,7 @@
 package com.example.springboot.persistence;
 
 import com.example.springboot.persistence.base.BaseEntity;
-import jakarta.persistence.Entity;
+import javax.persistence.Entity;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
