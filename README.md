@@ -3,7 +3,7 @@
 
 # Summary
 
-- after updating spring boot to 3.0.1 (which also updates hibernate to 6.1.6.Final) join fetching of nested entities does not work anymore when the entity is in an abstract superclass that uses @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+- after updating spring boot to 3.0.1 (which also updates hibernate to 6.1.6.Final) join fetching of nested entities does not work anymore when the nestedEntity reference is in an abstract superclass ("BodyPart") that uses @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 - the result is a LazyInitializationException when accessing fields in the nested entity although join fetch has been specified in the @Query
 
 
@@ -27,14 +27,18 @@
 
 ## Observations in Hibernate 5.6.14.Final
 
-- the query created by findByIdJoinFetchLegsWithNestedEntity is correct
+- the query created by findByIdJoinFetchLegsWithNestedEntity is working correct
+- it join fetches both the body_part and the nested_entity table
+- it uses a left OUTER join for that
+- it only defines the clause legs1_.discriminator='LegBodyPart' once
 
-
+![](src/main/resources/images/hibernate5_working.png)
 
 ## Observations in Hibernate 6.1.6.Final
 
-- the query created by findByIdJoinFetchLegsWithNestedEntity is NOT correct
+- the query created by findByIdJoinFetchLegsWithNestedEntity is NOT working correct
   - there is no second left join which would join the nested_entity table
+  - it does NOT use a left join (not outer)
   - also, it is strange that there is a duplicate join clause l1_0.discriminator='LegBodyPart' and l1_0.discriminator='LegBodyPart'
 
 ![](src/main/resources/images/hibernate6_failing.png)
